@@ -215,3 +215,8 @@ footer{padding:28px 0 40px;border-top:1px solid rgba(255,255,255,.1);color:#a7a7
   try{votes=JSON.parse(localStorage.getItem(key+"_tally")||"null");}catch(e){votes=null;}
   if(!votes)votes={0:11,1:9,2:7,3:18};
   function render(sel){if(!box)return;var total=0;for(var i=0;i<opts.length;i++)total+=votes[i]||0;box.innerHTML="";for(var i=0;i<opts.length;i++){(function(i){var n=votes[i]||0,pct=total?Math.round(n*100/total):0;var b=document.createElement("button");b.type="button";b.innerHTML="<strong>"+opts[i]+"</strong> — "+pct+"% ("+n+")<div class='pbar'><div class='pfill' style='width:"+pct+"%'></div></div>";if(sel===i)b.style.borderColor="#ff4d00";if(!voted){b.onclick=function(){votes[i]=(votes[i]||0)+1;localStorage.setItem(key+"_tally",JSON.stringify(votes));localStorage.setItem(key+"_me",String(i));voted=String(i);render(i);};}box.appendChild(b);})(i);}}
+  render(voted==null?-1:parseInt(voted,10));
+})();
+</script>
+</body>
+</html>
