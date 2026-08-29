@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Play | Combo Carnage</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Oswald:wght@400;600;700&family=Teko:wght@500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<nav>
+  <div class="in">
+    <a class="brand" href="index.html"><img src="images/header.jpg" alt="Combo Carnage"><span>Combo Carnage</span></a>
+    <div class="links">
+      <a href="index.html">Home</a>
+      <a href="about.html">About</a>
+      <a href="features.html">Features</a>
+      <a href="gallery.html">Gallery</a>
+      <a class="on" href="play.html">Play</a>
+      <a class="btn fire" href="https://store.steampowered.com/app/4696710/Combo_Carnage/" target="_blank" rel="noopener">Steam</a>
+    </div>
+  </div>
+</nav>
+
+<section id="rampage">
+  <div class="in">
+    <div class="k">Mini-game</div>
+    <h2>GrandView <span class="f">Rampage</span></h2>
+    <p class="lead">30 seconds. Tap every target. Keep the combo alive. Miss or tap empty street and it drops.</p>
+    <div class="arena" id="arena" style="background-image:url('images/ss2.jpg')">
+      <div class="arena-ui">
+        <div>COMBO <b id="gCombo" style="color:#ffb000">0x</b></div>
+        <div>SCORE <b id="gScore" style="color:#3ec7ff">0</b></div>
+        <div>TIME <b id="gTime">30</b></div>
+      </div>
+      <div class="overlay" id="gStart">
+        <h2 style="font-size:42px;margin-bottom:8px">Trash <span class="f">GrandView</span></h2>
+        <p class="lead" style="margin-bottom:16px">Click / tap targets. Cops, donuts, banks, beers.</p>
+        <button class="btn fire" id="gGo" type="button">Start Rampage</button>
+        <p style="margin-top:12px;color:#a7a7b3" id="gBest">Best: 0</p>
+      </div>
+    </div>
+    <div class="cta" style="margin-top:22px;justify-content:flex-start">
+      <a class="btn ice" href="https://store.steampowered.com/app/4696710/Combo_Carnage/" target="_blank" rel="noopener">Wishlist the full game</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="in" style="display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap">
+    <div><strong style="color:#fff">Combo Carnage</strong><br>GrandView · Flame Games</div>
+    <div class="hide-embed"><a href="https://store.steampowered.com/app/4696710/Combo_Carnage/" target="_blank" rel="noopener">Steam</a></div>
+  </div>
+  <div class="in warn">Mature content: violence, criminal activity, alcohol as a gameplay mechanic, strong language, crude humor, and explicit verbal insults.</div>
+  <p class="in" style="margin-top:12px">&copy; Flame Games. All rights reserved.</p>
+</footer>
+<script src="js/common.js"></script>
+<script src="js/game.js"></script>
+</body>
+</html>
