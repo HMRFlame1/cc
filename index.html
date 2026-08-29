@@ -1,531 +1,217 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Combo Carnage — No Rules. No Filter. No Mercy.</title>
-  <meta name="description" content="Combo Carnage is a fast-paced single-player arcade rampage. Chain brutal attacks and sharp-tongued insults, stack combos, unlock weapons, and dominate the leaderboard. Coming to Steam." />
-  <link rel="icon" href="images/logo.png" />
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Oswald:wght@400;500;600;700&family=Teko:wght@400;500;600;700&display=swap" rel="stylesheet" />
-  <style>
-    :root {
-      --bg: #070708;
-      --bg-2: #101014;
-      --panel: #16161c;
-      --ice: #3ec7ff;
-      --ice-2: #7adfff;
-      --fire: #ff4d00;
-      --fire-2: #ffb000;
-      --pink: #ff2d7a;
-      --text: #f4f4f6;
-      --muted: #a7a7b3;
-      --line: rgba(255,255,255,.08);
-      --shadow: 0 20px 60px rgba(0,0,0,.45);
-    }
-
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    html { scroll-behavior: smooth; }
-    body {
-      font-family: "Oswald", system-ui, sans-serif;
-      background: var(--bg);
-      color: var(--text);
-      line-height: 1.5;
-      overflow-x: hidden;
-    }
-
-    img { max-width: 100%; display: block; }
-    a { color: inherit; text-decoration: none; }
-
-    .wrap {
-      width: min(1900px, calc(100% - 40px));
-      margin: 0 auto;
-    }
-
-    /* NAV */
-    header.nav {
-      position: sticky;
-      top: 0;
-      z-index: 50;
-      backdrop-filter: blur(14px);
-      background: rgba(7,7,8,.72);
-      border-bottom: 1px solid var(--line);
-    }
-    .nav-inner {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      height: 72px;
-    }
-    .brand {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      font-family: "Bebas Neue", sans-serif;
-      letter-spacing: .08em;
-      font-size: 28px;
-    }
-    .brand span.combo { color: var(--ice); }
-    .brand span.carnage { color: var(--fire); }
-    .nav-links {
-      display: flex;
-      align-items: center;
-      gap: 28px;
-      font-size: 15px;
-      letter-spacing: .12em;
-      text-transform: uppercase;
-      color: var(--muted);
-    }
-    .nav-links a:hover { color: #fff; }
-    .btn {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      padding: 12px 22px;
-      border: 0;
-      cursor: pointer;
-      font-family: "Oswald", sans-serif;
-      font-weight: 600;
-      letter-spacing: .12em;
-      text-transform: uppercase;
-      border-radius: 4px;
-      transition: transform .15s ease, filter .15s ease, box-shadow .15s ease;
-    }
-    .btn:hover { transform: translateY(-1px); filter: brightness(1.08); }
-    .btn-fire {
-      background: linear-gradient(90deg, var(--fire), var(--fire-2));
-      color: #140800;
-      box-shadow: 0 8px 24px rgba(255,77,0,.28);
-    }
-    .btn-ice {
-      background: linear-gradient(90deg, #1496d8, var(--ice));
-      color: #031018;
-      box-shadow: 0 8px 24px rgba(62,199,255,.22);
-    }
-    .btn-ghost {
-      background: transparent;
-      color: #fff;
-      border: 1px solid rgba(255,255,255,.18);
-    }
-
-    /* HERO */
-    .hero {
-      position: relative;
-      min-height: calc(100vh - 72px);
-      display: grid;
-      place-items: center;
-      overflow: hidden;
-    }
-    .hero-bg {
-      position: absolute;
-      inset: 0;
-      background:
-        linear-gradient(180deg, rgba(7,7,8,.15) 0%, rgba(7,7,8,.55) 55%, #070708 100%),
-        url("images/hero-action.jpg") center/cover no-repeat;
-      filter: saturate(1.05) contrast(1.05);
-      transform: scale(1.04);
-    }
-    .hero-bg::after {
-      content: "";
-      position: absolute;
-      inset: 0;
-      background:
-        radial-gradient(ellipse at 20% 80%, rgba(255,77,0,.18), transparent 50%),
-        radial-gradient(ellipse at 80% 20%, rgba(62,199,255,.12), transparent 45%);
-    }
-    .hero-content {
-      position: relative;
-      z-index: 2;
-      text-align: center;
-      padding: 80px 0 100px;
-    }
-    .logo {
-      width: min(720px, 92vw);
-      margin: 0 auto 18px;
-      filter: drop-shadow(0 18px 30px rgba(0,0,0,.65));
-    }
-    .tagline {
-      font-family: "Teko", sans-serif;
-      font-size: clamp(22px, 3.4vw, 36px);
-      letter-spacing: .28em;
-      text-transform: uppercase;
-      color: #fff;
-      text-shadow: 0 2px 18px rgba(0,0,0,.7);
-      margin-bottom: 10px;
-    }
-    .sub {
-      color: #d7d7de;
-      max-width: 680px;
-      margin: 0 auto 28px;
-      font-size: 18px;
-    }
-    .hero-cta { display: flex; justify-content: center; gap: 12px; flex-wrap: wrap; }
-    .badge-row {
-      margin-top: 28px;
-      display: flex;
-      justify-content: center;
-      gap: 10px;
-      flex-wrap: wrap;
-    }
-    .badge {
-      font-size: 12px;
-      letter-spacing: .16em;
-      text-transform: uppercase;
-      padding: 7px 10px;
-      border: 1px solid var(--line);
-      background: rgba(0,0,0,.35);
-      color: #cfcfd8;
-    }
-
-    /* SECTIONS */
-    section { padding: 88px 0; }
-    .kicker {
-      font-family: "Teko", sans-serif;
-      letter-spacing: .28em;
-      text-transform: uppercase;
-      color: var(--ice);
-      font-size: 20px;
-      margin-bottom: 8px;
-    }
-    h2 {
-      font-family: "Bebas Neue", sans-serif;
-      font-size: clamp(40px, 6vw, 72px);
-      line-height: .9;
-      letter-spacing: .04em;
-      margin-bottom: 18px;
-    }
-    h2 .fire { color: var(--fire); }
-    h2 .ice { color: var(--ice); }
-    p.lead { color: var(--muted); max-width: 62ch; font-size: 18px; }
-
-    .about-grid {
-      display: grid;
-      grid-template-columns: 1.05fr .95fr;
-      gap: 48px;
-      align-items: center;
-    }
-    .about-copy p + p { margin-top: 16px; color: #c9c9d2; }
-    .quote {
-      margin-top: 22px;
-      padding: 18px 20px;
-      border-left: 4px solid var(--fire);
-      background: linear-gradient(90deg, rgba(255,77,0,.12), transparent);
-      font-family: "Teko", sans-serif;
-      font-size: 28px;
-      letter-spacing: .08em;
-      text-transform: uppercase;
-    }
-    .shot {
-      border-radius: 10px;
-      overflow: hidden;
-      box-shadow: var(--shadow);
-      border: 1px solid var(--line);
-    }
-    .shot img { width: 100%; height: 100%; object-fit: cover; }
-
-    .features {
-      background:
-        radial-gradient(circle at 10% 20%, rgba(62,199,255,.08), transparent 35%),
-        radial-gradient(circle at 90% 80%, rgba(255,77,0,.08), transparent 40%),
-        var(--bg-2);
-      border-top: 1px solid var(--line);
-      border-bottom: 1px solid var(--line);
-    }
-    .feat-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 18px;
-      margin-top: 36px;
-    }
-    .card {
-      background: var(--panel);
-      border: 1px solid var(--line);
-      padding: 26px 24px 28px;
-      border-radius: 10px;
-      min-height: 190px;
-    }
-    .card h3 {
-      font-family: "Bebas Neue", sans-serif;
-      font-size: 28px;
-      letter-spacing: .04em;
-      margin: 10px 0 8px;
-    }
-    .card p { color: var(--muted); }
-    .icon {
-      width: 42px; height: 42px;
-      display: grid; place-items: center;
-      border-radius: 8px;
-      font-size: 20px;
-      background: rgba(255,255,255,.05);
-    }
-
-    .gallery-grid {
-      display: grid;
-      grid-template-columns: 1.4fr 1fr;
-      grid-template-rows: auto auto;
-      gap: 16px;
-      margin-top: 32px;
-    }
-    .g-item {
-      position: relative;
-      overflow: hidden;
-      border-radius: 10px;
-      border: 1px solid var(--line);
-      cursor: zoom-in;
-      min-height: 240px;
-    }
-    .g-item img {
-      width: 100%; height: 100%;
-      object-fit: cover;
-      transition: transform .45s ease;
-    }
-    .g-item:hover img { transform: scale(1.05); }
-    .g-item.wide { grid-column: 1 / 2; grid-row: 1 / 3; min-height: 520px; }
-    .caption {
-      position: absolute;
-      left: 12px; bottom: 12px;
-      background: rgba(0,0,0,.62);
-      padding: 6px 10px;
-      font-size: 12px;
-      letter-spacing: .14em;
-      text-transform: uppercase;
-    }
-
-    .cta-band {
-      position: relative;
-      overflow: hidden;
-      padding: 90px 0;
-      background:
-        linear-gradient(180deg, rgba(7,7,8,.55), rgba(7,7,8,.82)),
-        url("images/hero-menu.jpg") center 30%/cover no-repeat;
-    }
-    .cta-inner { text-align: center; }
-    .cta-inner p { color: #ddd; margin: 0 auto 24px; max-width: 56ch; }
-
-    footer {
-      padding: 36px 0 48px;
-      border-top: 1px solid var(--line);
-      color: var(--muted);
-      font-size: 14px;
-    }
-    .foot {
-      display: flex;
-      justify-content: space-between;
-      gap: 24px;
-      flex-wrap: wrap;
-    }
-    .warn {
-      margin-top: 18px;
-      padding: 14px 16px;
-      border: 1px solid rgba(255,45,122,.28);
-      background: rgba(255,45,122,.07);
-      color: #efc8d8;
-      font-size: 13px;
-    }
-
-    /* Lightbox */
-    .lb {
-      position: fixed; inset: 0; z-index: 100;
-      background: rgba(0,0,0,.88);
-      display: none;
-      place-items: center;
-      padding: 24px;
-    }
-    .lb.open { display: grid; }
-    .lb img { max-width: min(1200px, 92vw); max-height: 88vh; border-radius: 8px; }
-    .lb-close {
-      position: absolute; top: 16px; right: 20px;
-      background: none; border: 0; color: #fff; font-size: 32px; cursor: pointer;
-    }
-
-    .mobile-toggle { display: none; background: none; border: 0; color: #fff; font-size: 26px; }
-
-    @media (max-width: 900px) {
-      .about-grid, .feat-grid, .gallery-grid { grid-template-columns: 1fr; }
-      .g-item.wide { grid-column: auto; grid-row: auto; min-height: 280px; }
-      .nav-links { display: none; }
-      .nav-links.open {
-        display: flex;
-        flex-direction: column;
-        position: absolute;
-        top: 72px; left: 0; right: 0;
-        background: #0c0c10;
-        padding: 20px;
-        border-bottom: 1px solid var(--line);
-      }
-      .mobile-toggle { display: block; }
-      .hero-content { padding-top: 48px; }
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Combo Carnage | GrandView</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Oswald:wght@400;600;700&family=Teko:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:#070708;color:#f4f4f6;font-family:Oswald,Arial,sans-serif;overflow-x:hidden}
+a{color:inherit;text-decoration:none}
+img{max-width:100%;display:block}
+.in{width:min(1120px,calc(100% - 28px));margin:0 auto}
+nav{position:sticky;top:0;z-index:50;background:rgba(7,7,8,.94);border-bottom:1px solid rgba(255,255,255,.1);backdrop-filter:blur(12px)}
+nav .in{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:8px 0}
+.brand img{height:52px;width:auto;filter:drop-shadow(0 0 12px rgba(255,77,0,.4))}
+.links{display:flex;flex-wrap:wrap;gap:4px;align-items:center}
+.links a{padding:7px 10px;letter-spacing:.12em;text-transform:uppercase;font-size:13px;color:#a7a7b3}
+.links a:hover,.links a.on{color:#fff}
+.btn{display:inline-block;padding:12px 20px;border-radius:4px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;font-size:14px;border:0;cursor:pointer;font-family:Oswald,Arial,sans-serif}
+.fire{background:linear-gradient(90deg,#ff4d00,#ffb000);color:#140800}
+.ice{background:linear-gradient(90deg,#1496d8,#3ec7ff);color:#031018}
+.ghost{border:1px solid rgba(255,255,255,.2);background:transparent;color:#fff}
+.hero{position:relative;min-height:100vh;display:flex;align-items:center;justify-content:center;text-align:center;padding:72px 0;overflow:hidden}
+.hero-photo{position:absolute;inset:0;background:url("images/hero.jpg") center 30%/cover;animation:ken 18s ease-in-out infinite alternate}
+.hero-dim{position:absolute;inset:0;background:linear-gradient(180deg,rgba(7,7,8,.3),rgba(7,7,8,.92))}
+@keyframes ken{from{transform:scale(1.04)}to{transform:scale(1.12)}}
+#embers{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:1}
+.hero-c{position:relative;z-index:2}
+.hero-logo{width:min(520px,86vw);margin:0 auto 10px}
+.tag{font-family:Teko,sans-serif;letter-spacing:.28em;text-transform:uppercase;font-size:clamp(18px,3vw,28px);margin:8px 0;animation:flick 4.5s infinite}
+@keyframes flick{0%,19%,21%,50%,52%,100%{opacity:1}20%,51%{opacity:.45}}
+.where{color:#ffb000;letter-spacing:.22em;text-transform:uppercase;font-family:Teko,sans-serif;font-size:20px}
+.sub{color:#d7d7de;max-width:640px;margin:8px auto 22px;font-size:18px}
+.cta{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+.meter{margin:24px auto 0;width:min(400px,92%);background:rgba(0,0,0,.45);border:1px solid rgba(255,255,255,.1);padding:8px 12px;text-align:left}
+.meter b{font-family:Teko,sans-serif;color:#3ec7ff}
+.meter span{float:right;color:#ffb000;font-family:Teko,sans-serif}
+.bar{height:8px;background:#222;margin-top:6px;overflow:hidden}
+.fill{height:100%;width:0;background:linear-gradient(90deg,#3ec7ff,#ff4d00);animation:fill 2.2s .3s ease forwards}
+@keyframes fill{to{width:92%}}
+section{padding:72px 0}
+.k{font-family:Teko,sans-serif;letter-spacing:.24em;text-transform:uppercase;color:#3ec7ff;font-size:18px}
+h2{font-family:"Bebas Neue",Impact,sans-serif;font-size:clamp(36px,6.4vw,68px);line-height:.92;margin:6px 0 14px;font-weight:400}
+h2 .f{color:#ff4d00}
+.lead{color:#a7a7b3;max-width:64ch;font-size:18px}
+.grid{display:grid;grid-template-columns:1.05fr .95fr;gap:28px;align-items:center}
+.cards{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.cards.one{grid-template-columns:1fr}
+.card{background:#14141a;border:1px solid rgba(255,255,255,.1);padding:18px;border-radius:8px}
+.card:hover{transform:translateY(-6px);border-color:rgba(255,77,0,.45)}
+.card h3{font-family:"Bebas Neue",Impact,sans-serif;font-size:24px;margin:4px 0 8px}
+.card p{color:#a7a7b3;font-size:15px}
+.shot{border-radius:10px;border:1px solid rgba(255,255,255,.12);overflow:hidden;box-shadow:0 20px 50px rgba(0,0,0,.45)}
+.shot img{width:100%;height:100%;object-fit:cover}
+.band{background:#101014;border-top:1px solid rgba(255,255,255,.1);border-bottom:1px solid rgba(255,255,255,.1)}
+.arena{background:#0c0c10 url("images/street.png") center/cover;border:1px solid rgba(255,255,255,.1);border-radius:10px;min-height:420px;position:relative;overflow:hidden;cursor:crosshair;margin-top:18px}
+.arena::before{content:"";position:absolute;inset:0;background:rgba(7,7,8,.55)}
+.arena-ui{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;padding:10px 12px;background:rgba(0,0,0,.62);position:absolute;left:0;right:0;top:0;z-index:3;font-family:Teko,sans-serif;font-size:22px}
+.target{position:absolute;width:74px;height:74px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:28px;transform:translate(-50%,-50%);border:3px solid #fff;cursor:pointer;z-index:2}
+.t-cop{background:#1a2a44}.t-donut{background:#6b2a6e}.t-bank{background:#3a2a12}.t-beer{background:#5a2208}
+.float{position:absolute;pointer-events:none;font-family:Teko,sans-serif;font-size:22px;animation:up .7s ease forwards;z-index:4}
+@keyframes up{to{transform:translateY(-40px);opacity:0}}
+.overlay{position:absolute;inset:0;background:rgba(0,0,0,.66);display:flex;align-items:center;justify-content:center;flex-direction:column;text-align:center;z-index:5;padding:20px}
+.overlay.hidden{display:none}
+.poll button{width:100%;text-align:left;margin:8px 0;padding:12px 14px;background:#14141a;border:1px solid rgba(255,255,255,.1);color:#fff;border-radius:6px;cursor:pointer;font-family:Oswald,Arial,sans-serif;font-size:16px}
+.poll button:hover{border-color:#ff4d00}
+.pbar{height:10px;background:#222;border-radius:6px;overflow:hidden;margin-top:6px}
+.pfill{height:100%;background:linear-gradient(90deg,#3ec7ff,#ff4d00);width:0}
+footer{padding:28px 0 40px;border-top:1px solid rgba(255,255,255,.1);color:#a7a7b3;font-size:13px}
+.warn{margin-top:14px;padding:12px;border:1px solid rgba(255,45,122,.3);background:rgba(255,45,122,.08);color:#efc8d8}
+.center{text-align:center}
+@media(max-width:800px){.grid,.cards{grid-template-columns:1fr}nav .in{flex-direction:column;align-items:flex-start}}
+</style>
 </head>
 <body>
-  <header class="nav">
-    <div class="wrap nav-inner">
-      <a class="brand" href="#top">
-        <span class="combo">COMBO</span>
-        <span class="carnage">CARNAGE</span>
-      </a>
-      <button class="mobile-toggle" aria-label="Menu" onclick="document.getElementById('links').classList.toggle('open')">☰</button>
-      <nav id="links" class="nav-links">
-        <a href="#about">About</a>
-        <a href="#features">Features</a>
-        <a href="#gallery">Screens</a>
-        <a href="#play">Wishlist</a>
-        <a class="btn btn-fire" href="https://store.steampowered.com/app/4696710/Combo_Carnage/" target="_blank" rel="noopener">Steam Page</a>
-      </nav>
+<nav>
+  <div class="in">
+    <a class="brand" href="#top"><img src="images/logo.png" alt="Combo Carnage"></a>
+    <div class="links">
+      <a class="on" href="#top">Home</a>
+      <a href="#grandview">GrandView</a>
+      <a href="#rampage">Mini-game</a>
+      <a href="#poll">Poll</a>
+      <a href="#play">Play</a>
+      <a class="btn fire" href="https://store.steampowered.com/app/4696710/Combo_Carnage/" target="_blank" rel="noopener">Steam</a>
     </div>
-  </header>
-
-  <main id="top">
-    <section class="hero">
-      <div class="hero-bg" aria-hidden="true"></div>
-      <div class="hero-content wrap">
-        <img class="logo" src="images/logo.png" alt="Combo Carnage logo" />
-        <p class="tagline">No Rules. No Filter. No Mercy.</p>
-        <p class="sub">A fast-paced 2000s-style arcade brawler. Chain attacks, stack insults, cash out, and leave the town in ruins.</p>
-        <div class="hero-cta">
-          <a class="btn btn-fire" href="https://store.steampowered.com/app/4696710/Combo_Carnage/" target="_blank" rel="noopener">Wishlist on Steam</a>
-          <a class="btn btn-ghost" href="#about">See the Mayhem</a>
-        </div>
-        <div class="badge-row">
-          <span class="badge">Single-Player</span>
-          <span class="badge">Arcade Rampage</span>
-          <span class="badge">Combo Scoring</span>
-          <span class="badge">Currently in Alpha</span>
-        </div>
-      </div>
-    </section>
-
-    <section id="about">
-      <div class="wrap about-grid">
-        <div class="about-copy">
-          <p class="kicker">The Game</p>
-          <h2>Chaos is the <span class="fire">objective</span>.<br>Combos are <span class="ice">everything</span>.</h2>
-          <p class="lead">Step into the boots of a foul-mouthed Aussie brawler with a short fuse and a love for destruction.</p>
-          <p>Fight through relentless waves of enemies, chaining brutal attacks and sharp-tongued insults to build massive combo scores. Earn cash through combat, unlock new weapons, adapt your playstyle, and chase the leaderboard.</p>
-          <p>This isn’t fair. It’s not polite. It’s pure arcade mayhem.</p>
-          <div class="quote">Verbally abuse everyone.</div>
-        </div>
-        <figure class="shot">
-          <img src="images/hero-menu.jpg" alt="Combo Carnage title screen with the brawler holding Carnage Beer" />
-        </figure>
-      </div>
-    </section>
-
-    <section class="features" id="features">
-      <div class="wrap">
-        <p class="kicker">What you get</p>
-        <h2>Stack hits. Stack <span class="fire">cash</span>. Stack chaos.</h2>
-        <p class="lead">Keep the combo alive and the town doesn’t stand a chance.</p>
-        <div class="feat-grid">
-          <article class="card">
-            <div class="icon">💥</div>
-            <h3>Combo-Driven Combat</h3>
-            <p>Chain brutal attacks and insults into one long, nasty streak. Drop the combo and you drop the cash.</p>
-          </article>
-          <article class="card">
-            <div class="icon">🏆</div>
-            <h3>Score Attack</h3>
-            <p>Every run is a chance to go bigger, faster, and more ruthless. Climb the Steam leaderboards.</p>
-          </article>
-          <article class="card">
-            <div class="icon">🔫</div>
-            <h3>Unlockable Arsenal</h3>
-            <p>Earn cash in combat and spend it on new weapons and upgrades so the next rampage hits harder.</p>
-          </article>
-          <article class="card">
-            <div class="icon">🗣️</div>
-            <h3>No Filter Dialogue</h3>
-            <p>Over-the-top insults are part of the combo. The mouth is a weapon. Use it.</p>
-          </article>
-          <article class="card">
-            <div class="icon">🔁</div>
-            <h3>Endless Replayability</h3>
-            <p>Skill-based runs, new toys, and a town full of targets. Come back meaner every time.</p>
-          </article>
-          <article class="card">
-            <div class="icon">🍺</div>
-            <h3>Pure Arcade Mayhem</h3>
-            <p>Low-poly chaos, sheriff cars, flaming banks, and Carnage Beer. A 2000s arcade brawler with zero manners.</p>
-          </article>
-        </div>
-      </div>
-    </section>
-
-    <section id="gallery">
-      <div class="wrap">
-        <p class="kicker">Screens</p>
-        <h2>Welcome to the <span class="fire">neighborhood</span>.</h2>
-        <p class="lead">Don’s Donuts. American Bank. County sheriffs. One very unhelpful tourist.</p>
-        <div class="gallery-grid">
-          <figure class="g-item wide" data-full="images/hero-action.jpg">
-            <img src="images/hero-action.jpg" alt="Brawler with Carnage Beer facing sheriff vehicles as the bank burns" />
-            <figcaption class="caption">Main street welcome</figcaption>
-          </figure>
-          <figure class="g-item" data-full="images/town-sheriffs.jpg">
-            <img src="images/town-sheriffs.jpg" alt="County sheriff cruisers parked outside Don's Donuts and American Bank" />
-            <figcaption class="caption">County's finest</figcaption>
-          </figure>
-          <figure class="g-item" data-full="images/street.jpg">
-            <img src="images/street.jpg" alt="Quiet town sidewalk before the carnage starts" />
-            <figcaption class="caption">Before the combo</figcaption>
-          </figure>
-        </div>
-        <figure class="g-item" data-full="images/verbally-abuse.png" style="margin-top:16px;min-height:220px">
-          <img src="images/verbally-abuse.png" alt="Verbally Abuse Everyone" style="object-fit:contain;background:#0a0a0c" />
-          <figcaption class="caption">House rules</figcaption>
-        </figure>
-      </div>
-    </section>
-
-    <section class="cta-band" id="play">
-      <div class="wrap cta-inner">
-        <p class="kicker">Steam</p>
-        <h2>Wishlist it. Then <span class="fire">wreck</span> it.</h2>
-        <p>Combo Carnage is in Alpha from Flame Games. Expect ongoing updates, new content, and the price may rise as the game heads toward full release.</p>
-        <a class="btn btn-ice" href="https://store.steampowered.com/app/4696710/Combo_Carnage/" target="_blank" rel="noopener">Open Steam Store Page</a>
-      </div>
-    </section>
-  </main>
-
-  <footer>
-    <div class="wrap">
-      <div class="foot">
-        <div>
-          <strong style="color:#fff">Combo Carnage</strong><br />
-          Developed and published by Flame Games
-        </div>
-        <div>
-          <a href="https://store.steampowered.com/app/4696710/Combo_Carnage/" target="_blank" rel="noopener">Steam</a>
-          &nbsp;·&nbsp;
-          <a href="https://steamcommunity.com/app/4696710" target="_blank" rel="noopener">Community Hub</a>
-        </div>
-      </div>
-      <div class="warn">
-        Mature content: frequent violence, criminal activity, alcohol as a gameplay mechanic, strong language, crude humor, and explicit verbal insults. Contains strong language and mature themes. Not suitable for all audiences. This game uses generative AI for portions of the music and some character voice lines, reviewed and integrated by the developer.
-      </div>
-      <p style="margin-top:16px">Unofficial fan / promo page layout. All game art and trademarks belong to Flame Games. © Flame Games.</p>
-    </div>
-  </footer>
-
-  <div class="lb" id="lb" onclick="if(event.target.id==='lb')closeLb()">
-    <button class="lb-close" onclick="closeLb()" aria-label="Close">×</button>
-    <img id="lb-img" alt="Screenshot enlarged" />
   </div>
+</nav>
 
-  <script>
-    const lb = document.getElementById("lb");
-    const lbImg = document.getElementById("lb-img");
-    document.querySelectorAll(".g-item").forEach((el) => {
-      el.addEventListener("click", () => {
-        lbImg.src = el.dataset.full;
-        lb.classList.add("open");
-      });
-    });
-    function closeLb() { lb.classList.remove("open"); lbImg.src = ""; }
-    document.addEventListener("keydown", (e) => { if (e.key === "Escape") closeLb(); });
-  </script>
-</body>
-</html>
+<section class="hero" id="top">
+  <div class="hero-photo"></div>
+  <div class="hero-dim"></div>
+  <canvas id="embers"></canvas>
+  <div class="hero-c in">
+    <div class="where">Welcome to GrandView</div>
+    <img class="hero-logo" src="images/logo.png" alt="Combo Carnage">
+    <p class="tag">No Rules. No Filter. No Mercy.</p>
+    <p class="sub">A fast-paced arcade rampage through the town of GrandView. Chain attacks, stack insults, cash out, and leave nothing standing.</p>
+    <div class="cta">
+      <a class="btn fire" href="https://store.steampowered.com/app/4696710/Combo_Carnage/" target="_blank" rel="noopener">Wishlist on Steam</a>
+      <a class="btn ghost" href="#rampage">Smash GrandView</a>
+    </div>
+    <div class="meter"><b>COMBO</b><span id="heroCombo">0x</span><div class="bar"><div class="fill"></div></div></div>
+  </div>
+</section>
+
+<section id="grandview">
+  <div class="in grid">
+    <div>
+      <div class="k">The world</div>
+      <h2>GrandView looks quiet.<br>It <span class="f">isn't</span>.</h2>
+      <p class="lead">Don's Donuts. American Bank. County sheriffs on every corner. GrandView is a small town with a short fuse — and Wayne just pulled into it with pixel shades and a bad attitude.</p>
+      <div class="cards" style="margin-top:16px">
+        <article class="card"><h3>Don's Donuts</h3><p>Coffee, glaze, and terrible decisions.</p></article>
+        <article class="card"><h3>American Bank</h3><p>GrandView's finest vault. For now.</p></article>
+        <article class="card"><h3>County Sheriffs</h3><p>Lights on. Patience off.</p></article>
+        <article class="card"><h3>Wayne</h3><p>Foul-mouthed Aussie. Short fuse.</p></article>
+      </div>
+    </div>
+    <div class="shot"><img src="images/grandview.jpg" alt="GrandView"></div>
+  </div>
+</section>
+
+<section class="band">
+  <div class="in grid">
+    <div class="shot"><img src="images/wayne.png" alt="Wayne"></div>
+    <div>
+      <div class="k">The man</div>
+      <h2>Meet <span class="f">Wayne</span></h2>
+      <p class="lead">Pixel shades. Zero filter. He did not come to GrandView to make friends. He came to stack a combo and cash out before the sheriffs catch up.</p>
+      <div class="shot" style="margin-top:16px"><img src="images/abuse.png" alt="Verbally abuse everyone"></div>
+    </div>
+  </div>
+</section>
+
+<section id="rampage">
+  <div class="in">
+    <div class="k">Mini-game</div>
+    <h2>GrandView <span class="f">Rampage</span></h2>
+    <p class="lead">30 seconds. Tap every target. Keep the combo alive. Miss and it drops.</p>
+    <div class="arena" id="arena">
+      <div class="arena-ui">
+        <div>COMBO <b id="gCombo" style="color:#ffb000">0x</b></div>
+        <div>SCORE <b id="gScore" style="color:#3ec7ff">0</b></div>
+        <div>TIME <b id="gTime">30</b></div>
+      </div>
+      <div class="overlay" id="gStart">
+        <h2 style="font-size:42px;margin-bottom:8px">Trash <span class="f">GrandView</span></h2>
+        <p class="lead" style="margin-bottom:16px">Click / tap targets.</p>
+        <button class="btn fire" id="gGo" type="button">Start Rampage</button>
+        <p style="margin-top:12px;color:#a7a7b3" id="gBest">Best: 0</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="poll" class="band">
+  <div class="in grid">
+    <div>
+      <div class="k">Poll</div>
+      <h2>Who gets wrecked first in <span class="f">GrandView</span>?</h2>
+      <div class="poll" id="pollBox"></div>
+    </div>
+    <div class="shot"><img src="images/menu.jpg" alt="Combo Carnage menu"></div>
+  </div>
+</section>
+
+<section id="play">
+  <div class="in grid">
+    <div class="shot"><img src="images/street.png" alt="GrandView street"></div>
+    <div class="center" style="text-align:left">
+      <div class="k">Steam</div>
+      <h2>Wishlist it. Then wreck <span class="f">GrandView</span>.</h2>
+      <p class="lead">Combo Carnage is in Alpha from Flame Games.</p>
+      <p style="margin-top:18px"><a class="btn ice" href="https://store.steampowered.com/app/4696710/Combo_Carnage/" target="_blank" rel="noopener">Open Steam Store Page</a></p>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="in" style="display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap">
+    <div><strong style="color:#fff">Combo Carnage</strong><br>GrandView · Flame Games</div>
+    <div><a href="https://store.steampowered.com/app/4696710/Combo_Carnage/" target="_blank">Steam</a></div>
+  </div>
+  <div class="in warn">Mature content: violence, criminal activity, alcohol as a gameplay mechanic, strong language, crude humor, and explicit verbal insults.</div>
+  <p class="in" style="margin-top:12px">&copy; Flame Games. All rights reserved.</p>
+</footer>
+
+<script>
+(function(){
+  var heroN=document.getElementById("heroCombo");
+  if(heroN){var t=128,s=performance.now();function tick(n){var p=Math.min(1,(n-s)/1600);heroN.textContent=Math.round(t*(1-Math.pow(1-p,3)))+"x";if(p<1)requestAnimationFrame(tick);}requestAnimationFrame(tick);}
+  var canvas=document.getElementById("embers");
+  if(canvas&&canvas.getContext){
+    var ctx=canvas.getContext("2d"),w,h,bits;
+    function resize(){w=canvas.width=canvas.offsetWidth||innerWidth;h=canvas.height=canvas.offsetHeight||innerHeight;bits=[];for(var i=0;i<42;i++)bits.push({x:Math.random()*w,y:Math.random()*h,r:Math.random()*2+.5,s:Math.random()*.7+.25,a:Math.random()*.5+.2,c:Math.random()>.35?"255,90,20":"80,200,255"});}
+    resize();addEventListener("resize",resize);
+    (function draw(){ctx.clearRect(0,0,w,h);for(var i=0;i<bits.length;i++){var p=bits[i];p.y-=p.s;p.x+=Math.sin(p.y*.02)*.3;if(p.y<-8){p.y=h+8;p.x=Math.random()*w;}ctx.beginPath();ctx.fillStyle="rgba("+p.c+","+p.a+")";ctx.arc(p.x,p.y,p.r,0,6.28);ctx.fill();}requestAnimationFrame(draw);})();
+  }
+  var insults=["Rack off!","Get stuffed!","Too slow, GrandView!","Combo's on!","Donut time!","Pay up!","No filter!","Carnage!"];
+  var types=[{cls:"t-cop",emoji:"🚓",pts:15},{cls:"t-donut",emoji:"🍩",pts:10},{cls:"t-bank",emoji:"🏦",pts:20},{cls:"t-beer",emoji:"🍺",pts:12}];
+  var arena=document.getElementById("arena"),start=document.getElementById("gStart"),go=document.getElementById("gGo");
+  var comboEl=document.getElementById("gCombo"),scoreEl=document.getElementById("gScore"),timeEl=document.getElementById("gTime"),bestEl=document.getElementById("gBest");
+  var playing=false,combo=0,score=0,timeLeft=30,spawnT,clockT,targets=[],best=parseInt(localStorage.getItem("cc_gv_best")||"0",10);
+  if(bestEl)bestEl.textContent="Best: "+best;
+  function clearTargets(){for(var i=0;i<targets.length;i++)if(targets[i].parentNode)targets[i].parentNode.removeChild(targets[i]);targets=[];}
+  function spawn(){if(!playing||!arena)return;var spec=types[Math.floor(Math.random()*types.length)];var el=document.createElement("div");el.className="target "+spec.cls;el.textContent=spec.emoji;el.style.left=(8+Math.random()*84)+"%";el.style.top=(22+Math.random()*68)+"%";el.onclick=function(ev){ev.stopPropagation();if(!playing)return;combo+=1;var add=spec.pts*Math.max(1,combo);score+=add;comboEl.textContent=combo+"x";scoreEl.textContent=score;pop(el.style.left,el.style.top,"+"+add+"  "+insults[Math.floor(Math.random()*insults.length)]);if(el.parentNode)el.parentNode.removeChild(el);};arena.appendChild(el);targets.push(el);setTimeout(function(){if(el.parentNode){el.parentNode.removeChild(el);combo=0;comboEl.textContent="0x";}},1400);}
+  function pop(l,t,text){var f=document.createElement("div");f.className="float";f.textContent=text;f.style.left=l;f.style.top=t;f.style.color="#ffb000";arena.appendChild(f);setTimeout(function(){if(f.parentNode)f.parentNode.removeChild(f);},700);}
+  function end(){playing=false;clearInterval(spawnT);clearInterval(clockT);clearTargets();if(score>best){best=score;localStorage.setItem("cc_gv_best",String(best));}start.classList.remove("hidden");start.style.display="flex";bestEl.textContent="Score "+score+"  ·  Best "+best;go.textContent="Run it back";}
+  if(go)go.onclick=function(){playing=true;combo=0;score=0;timeLeft=30;comboEl.textContent="0x";scoreEl.textContent="0";timeEl.textContent="30";start.classList.add("hidden");start.style.display="none";clearTargets();spawn();spawnT=setInterval(spawn,650);clockT=setInterval(function(){timeLeft-=1;timeEl.textContent=timeLeft;if(timeLeft<=0)end();},1000);};
+  if(arena)arena.addEventListener("click",function(e){if(playing&&e.target===arena){combo=0;comboEl.textContent="0x";}});
+  var opts=["County Sheriffs","American Bank","Don's Donuts","The whole of GrandView"],key="cc_gv_poll",votes,voted=localStorage.getItem(key+"_me"),box=document.getElementById("pollBox");
+  try{votes=JSON.parse(localStorage.getItem(key+"_tally")||"null");}catch(e){votes=null;}
+  if(!votes)votes={0:11,1:9,2:7,3:18};
+  function render(sel){if(!box)return;var total=0;for(var i=0;i<opts.length;i++)total+=votes[i]||0;box.innerHTML="";for(var i=0;i<opts.length;i++){(function(i){var n=votes[i]||0,pct=total?Math.round(n*100/total):0;var b=document.createElement("button");b.type="button";b.innerHTML="<strong>"+opts[i]+"</strong> — "+pct+"% ("+n+")<div class='pbar'><div class='pfill' style='width:"+pct+"%'></div></div>";if(sel===i)b.style.borderColor="#ff4d00";if(!voted){b.onclick=function(){votes[i]=(votes[i]||0)+1;localStorage.setItem(key+"_tally",JSON.stringify(votes));localStorage.setItem(key+"_me",String(i));voted=String(i);render(i);};}box.appendChild(b);})(i);}}
